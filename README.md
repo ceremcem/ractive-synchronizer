@@ -1,5 +1,3 @@
-# ractive-synchronizer
-
 # Description 
 
 This HOWTO explains how to convert sync components into async components in Ractive. 
