@@ -4,9 +4,9 @@ This HOWTO explains how to convert sync components into async components in Ract
 
 # Steps 
 
-### 1. Write a simple sync component 
+### 1. Write a simple component 
 
-Write a simple component:
+Write a simple (sync) component:
 
 ```js
 Ractive.components.foo = Ractive.extend({
