@@ -34,48 +34,51 @@ new Ractive({
 
 ### 2. Create a synchronizer proxy 
 
-1. Rename your component with `ASYNC` postfix 
-2. Create a synchronizer proxy with your original component's name 
-3. Set `@shared.deps._all` to `true` and see your synchronizer macro works correctly. 
+1. Create a synchronizer proxy with your original component's name 
 
-[Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSAvgGhAZ3gEoCGAxgC4CWAbggHQkD2AtgA4MB2C7ZutAZgwYBBAMoBNAHIBhAAQBeGcXLU6CAB5kuSABTAAOuz1lNrADZFNkGQAMDRowB4ARgFdjHGRwC0JUxRIA1nJ6IE5EMCEyvkS4uMEgMMgywMDRsRgYIQB8KQCeFAimSBkOAPSu7uxZdmS27BgAlADcduxKlDS0LOGURKa8AgzyiqQddEykMAza2mBE7EimCFgyFmQwuA3yWckGMlEcuGSeTgBWw-rs+-sMTrgIMDQbVgDaALpYe9cuLEgWCNo1hstsAZHMFktaPcyNoAOQAAVMDBIfVhKyBuBWoKQCAQLCs6xcCBkjSaJM+V2umnCSAYAHd2NoQV9ridTrRbvdHg8BgwYABRUhgbSebaeejzEiFJkyZosklfDAtQyGMhUcKeGAUFAAFQQZn+w3BizoJhY5k0ZJqpVKMiELBYWjt4mkMjYRz4FDUMjIQzIYGJjFYHC4x3YRCYCBqfO1eoNmloxIA1ApYaJJFJYTUcUtNJrY-rzf8ujV1TB8ygLlRIAAWFZkSAvGO6wsWhAfGQIaAZVo3M4cu4PJ68FguXDC42QzlDgEI8fhZC0HEsXgAfT6pjRMj4LnYyg42nVpgal32RgofEPfRPX3s-vmJqhCDIcaLmm0zbllKMGE7-WJp4yHeRiTnQ0Kvm22jWA4LBZAA6sSC7bs+JBgBQ7CVkGbCcNw26CGUsHWA0t5kJklKNMR36qokZAuDAVy3KcyqNK0BicHSIzKDQug1IUViwk4DBILkaI1GabZWHUjguKY1SqkYKQAMQIEKdowDARC5NoADMDQ9vJZCOH4cnAYZZAOIMUTmLE8ROKYRKRN4YQwPE8IoEiYSmLQfQPDCsIBiJMhJjI8LoTiajESAJlmaZ7AuEwMiKSkoULOo+mmY4pSDNFd5lMZNQKcApQqah6XmaUMnRdYFJGBwWG5l2267vujI3gZ-oULw0JwvC86JEgS54rgW7AOupimASMBEtgyQ4nik3TZRP4GI0mBAA)
+        Ractive.partials.foo = getSynchronizer();
 
-```js
-Ractive.partials.foo = Ractive.macro((handle, attrs) => {
-  const obj = {
-    observers: [],
-    update(attrs) { handle.set('@local', attrs, { deep: true }); },
-    teardown() {
-      obj.observers.forEach( o => o.cancel() );
-    }
-  };
+2. Rename your original component with `ASYNC` postfix (`foo` to `fooASYNC`)
 
-  var origTemplate = handle.template; 
-  // Append ASYNC postfix to the component name
-  origTemplate.e += 'ASYNC'
-  delete origTemplate.p
-  var orig = {v:4, t:[origTemplate], e:{}}
+3. Set `@shared.deps._all` to `true` immediately 
 
-  obj.observers.push(handle.observe('@shared.deps._all', function(val){
-    if(val){
-      handle.setTemplate(orig);
-    } else {
-      handle.setTemplate(`<p>We are fetching component foo</p>`)
-    }
-  }))
-  return obj;
-})
-```
+4. Test your `foo` synchronizer works correctly: [Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSAvgGhAZ3mgC4DKAngHYDGYMA9uQJYBeCMABALxsBmArlYQb0AFABtaAQyQNyKACoAHUQEpgAHXJrCMBIV4xybAEoTKggG4IAdAFtTdYcLATySUQixsJhbbmWcAPjZ1TUI2Nkp6XDDaACMAK05gjS1w8LjcVksYXEg2AG0AXSwUsLTeBSRvBGFvX39gNmdXdytMwmEAcgABcUoJUU7POpzPRqQEBAU87V4ENgxlAG4FktC0tkIECRgkWgB3cmEG0o30hKsMrNZcK25aGABRUzBhNlpA96t+qgRRY7Yy1OaQwwIwS1KkMI5h27xgDHkCBsSmqSWabmsW2RomqKyhAHp8WwAIIKBQIVwk4gATQAcgBhNgKWjRbgMAAemw+hDA80iyPoFLC5AkNgQUIeCLkSJRWys8wA1FxOsSaQzOlCJu4tnCpTKcXKFFCYexJSgksBzJAACyeQiQfJm6XY6rFNgIaAYUGhYFxeKXWKZGDZW4KXi4V7o1pXYM1HoRnbIKwTBS3AD6A0Gnj4AiERxhKhCqTYWgY3GEBdUwK0Wij1naztlNTNQPWJcIGHdokyyTbNcItZcGLaukbBpq4ikMnkSjYAB852wAAYAHgUAQA6vNEzxdNRpxFaALyEKeLRaCv8eul8pqx2wcpb32fdpdPpDH6IaFFhpvRpCREOiovcHy4BQ1B0IwLAwBoJhmAwlhWAoOyCAMtwgUkRBkFQND0MwrDHF+-5EjoIpime3IfCBqp0vSsGmBY1j8syJ7kIQ6HnjRDJJHBjHyuyWyuMIRY+Pq1R5EuUIrrEvA+PQ7zkAAtJQogMJQADWHBqCAsQ7NpEQ4rguBaSAOhIMEwAqRIRletpATAMApAMH8SBepeMlyeQASlJJ5CLERmjkCe+zGAxCE1CJfx5J0sS0EgpBDKUWJNhJpQrrwojeS+DkAMTbNQJIwDAEikMIADMyi2S+WgrqpWX9v2K4YVZRkmbEohzPp9CKbpMAmd0KDiLpohWAMrAdJ0vIJWwCpsN0MgTOyt4gPVA5rf25C8DYbA5Q582uAg7JVQ1a2XiBq2NfidVQg5+L5WAx2EJeGWrUuaxaPQzHah6PD8PBIhVi+PIMLc7RdN0CZmcmUy4EMwQZqIogzDAczYMEExTMjqNPlo3qLJgQA)
 
 ### 3. Load your component asynchronously 
 
-1. Load your `fooASYNC` component any time (preferably after `Ractive.oncomplete`) by any transport (XHR, uploading, websockets, etc.) you like
-2. Set `@shared.deps._all` to `true` when your ASYNC component is available. 
+1. Remove `fooASYNC` component from your bundle. Load it at any time (preferably sometime after `Ractive.oncomplete`) by any transport (XHR, websockets, manually uploading, etc.) you like
+2. Set `@shared.deps._all` flag to `true` when your ASYNC component is available. 
 
-[Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSAvgGhAZ3rgDYIIAOABALzkBmArgHYDGALgJYD2DAFALa5ZaASmDkYCFnRgNyuCQBU2vBBzotuNQfyHkMAHQYGASgENWbAG4IAdKRMx2Jwrms0OHKuVPmr13mZgObm4wEwYkYkETFhYYXB1KAD5yYANyciYuXBZyDgAjACtPVJl03Ly5GCs4yHIAbQBdLDSyulIkaIRuaNj4lPJQ8OJrOXUAcgABQg4mJzGomLjBUSQSUlrYugRdIQBuXWbS9JYEeyQOAHceHRKysvyC63zK6pc3GABRMzBuXKpkjjWWbMBCEbg6PYtdL6UoYXYGBEsCz2XIwNgoeQIXikQidTyDCI2E7Y3EnfaIgD0FPIAEFSKQEOFaQBlACaADkAMLkUgcbI0NgAD3ILA8LDA20y2K4jJyDBMykRHDRGKxOM61m2AGpqGMaWyuWNEatiCdUejMSSNaREciYOaUMULJAACyCFiQOrKi1q0kIJrkBDQDAwloPJ4VBBVKMuUh0XA-AnDZ5RqzcSYJ+zIayrUguAD6TkI81ojHMXG4yMIIhaenYNErThrpTrdaTNlGlvVJ243pQkJbLBh0KEQlrhnFYUJIwUvs63AABoi6wAeUiJADq2yztAkTDAbAYjqlvIYsto7hXFPXiIXY4n4kk0nKBXhDAw94RDCp5AAYmw4hycVJQ4aUzwYHIFzcDgF3INhcHIVYBTPJByBMBCTFkABPZgMlA09ZWsch5AlBhBDYHJ4PIAwf0yBhqhOVDRTQ3AcKYXIzyIgwzwuLwzHYNMSjrUFajGPIOCQLD5kRYluyDcglwnFc6EIRJlxYYBgAAYlOfdaRgGATCw7gAGYhBDdTV0INg1InVsWFXaCMlxXBcEoPQQDyQgtg8jiAFo8nsdyQAmFBpkCwhrCcKNxglKTyC1cgJkPVZBTHEBbPsrKWAYOheHILTNOS8IEEFCy7Icyqr2gzLKtXClrNqutNIpXSwHK+qVNqhdDjrLgT1NeT6GYdgK2beyiDWbgAEYAFYAAZ5sEcF-hSSyWG8ASbBPGUILedx9Q5blqE2ywbFKk5wm4IS6sq2S-VqRTsvslc8jUUUZC4PymGspgAGtgsCmBfJ+9C3I88RUM00HXIsjLNKwthQSQEMrzemIuCa26ntuj832y8V4JncYJkzSGczIXAS2AQtCEIDYYC2PH1I-L86xhD9MCAA)
+[Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSAvgGhAZ3mgC4DKAngHYDGYMA9uQJYBeCMABALxsBmArlYQb0AFABtaAQyQNyKACoAHUQEpgAHXJrCMBIV4xybAEoTKggG4IAdAFtTdYcLATySUQixsJhbbmWcAPjZ1TUI2Nkp6XDDaACMAK05gjS1w8LjcVksYXEg2AG0AXSwUsLTeBSRvBGFvX39gNmdXdytMwmEAcgABcUoJUU7POpzPRqQEBAU87V4ENgxlAG4FktC0tkIECRgkWgB3cmEG0o30hKsMrNZcK25aGABRUzBhNlpA96t+qgRRY7Yy1OaQwwIwS1KkMI5h27xgDHkCBsSmqSWabmsW2RomqKyhAHp8WwAIIKBQIVwk4gATQAcgBhNgKWjRbgMAAemw+hDA80iyPoFLC5AkNgQUIeCLkSJRWys8wA1FxOsSaQzOlCJu4tnCpTKcXKFFCYexJSgksBzJAACyeQiQfJm6XY6rFNgIaAYUGhYFxeKXWKZGDZW4KXi4V7o1pXYM1HoRnbIKwTBS3AD6A0Gnj4AiERxhKhCqTYWgY3GEBdUwK0Wij1naztlNTNQPWJcIGHdokyyTbNcItZcGLaukbBpq4ikMnkSjYAB852wAAYAHgUAQA6vNEzxdNRpxFaALyEKeLRaCv8eul8pqx2wcpb32fdpdPpDH6IaFFhpvRpCREOiovcHy4BQ1B0IwLAwBoJhmAwlhWAoOyCAMtwgUkRBkFQND0MwrDHF+GgnvsximBYNRFlsoh5J0sS0EgpBDKUWJNnkS6lCuvCiAEULAMAADE2zUCSMAwBIpDCAAzMoXpQloK6iAwvEvv2K4YZQOK4LgHBqCAsSiHMenvOQAC0sQ7LpIDdCg4gWaIVgDKwHSdLyTFsAqbDdDIEzsreIAqf2QWEOQvA2GwAn8d5rgIOycmqQOhCXiBgWJQp+JKalWj8fiwlgPF6XcalS5rFo9D8kougejw-DwSIVYvg2DBirQvAdACHBBFR-YAToIpime3IfCBqp0vS8mEHBFHfEezInuQhDoeeo0MkkU0IdYsVbK4wjdWlPj6tU7ErrEbWEPQJmmZpDCUAA1lZFkwSAERaTpek6EgwTAJpEjaXJAX8aQDB-EgXqXqdPj0AEHEJYsRH7TyDC3O0XTdAmH3JlMuBDMEGaiDRmwwHMcNQtgbAAIwAKwAAzU0+WjeosmBAA)
 
+```js
+// create foo synchronizer
+Ractive.partials.foo = getSynchronizer();
 
-
+new Ractive({
+	el: 'body',
+	template: `
+	<ul>
+		{{#each Array(3)}}
+			<li>
+				<foo class="blue" on-bar="@global.alert('hey' + @index)">
+					num #{{@index}}
+				</foo>
+			</li>
+		{{/each}}
+	</ul>
+	`,
+	oncomplete: function(){
+		setTimeout(() => {
+			// rename foo to fooASYNC
+			Ractive.components.fooASYNC = Ractive.extend({
+				template: `<button on-click="bar" class="red {{class}}">{{yield}}</button>`
+			});
+			this.set('@shared.deps', {_all: true});
+		}, 1500)
+	}
+})
+```
 
 
 
