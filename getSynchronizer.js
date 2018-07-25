@@ -1,4 +1,4 @@
-export default getSynchronizer = function(loadingTpl){
+window.getSynchronizer = function(loadingTpl){
   return Ractive.macro((handle, attrs) => {
     const obj = {
       observers: [],
