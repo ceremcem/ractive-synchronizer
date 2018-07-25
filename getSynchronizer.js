@@ -18,7 +18,7 @@ window.getSynchronizer = function(loadingTpl){
       if(val){
         handle.setTemplate(orig);
       } else {
-          handle.setTemplate(loadingTpl || `<p>We are fetching component foo</p>`)
+          handle.setTemplate(loadingTpl || `<p>We are fetching <i>${handle.name}</i></p>`)
       }
     }))
     
