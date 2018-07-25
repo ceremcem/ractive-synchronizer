@@ -6,6 +6,10 @@ This HOWTO explains how to convert sync components into async components in Ract
 1. Convert any sync component into async component with only 2 lines of modification. 
 2. Decide when, if and how you will load the component 
 
+### Screenshot 
+
+![async-fallback](https://user-images.githubusercontent.com/6639874/43196121-a5918686-900f-11e8-9718-793d49c9be34.gif)
+
 # Steps 
 
 ### 1. Write a simple component 
