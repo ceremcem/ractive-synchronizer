@@ -61,23 +61,12 @@ new Ractive({
 
 ### 2. Make it async 
 
-1. Create a synchronizer proxy with your original component's name
-
-        Ractive.partials.foo = getSynchronizer();
-
-
-2. Add `ASYNC` postfix to your original component name
-
-        Ractive.components.fooASYNC = Ractive.extend(...)
-
-3. Remove `fooASYNC` component from your bundle. Load it at any time (preferably sometime after `Ractive.oncomplete`) by any transport method (`<script>`, XHR, websockets, etc.) you like.
-4. Set `@shared.deps._all` flag to `true` when your ASYNC component is available. 
-
-[Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSANCAzlA2uAC6EAO2kA9BQMZIB2AdAFbZIIA2AlgG4wN0JCFFGBoIYCALbUpFGAENqhHggC02AJ51qYGAHs6nAF7iAAtwAMDAEwMAjMMEBlLTv2GTfFiAC6AXyxcSBAqAAJqCXlCBFCAMz09UM1tXQNjcQAdOgAlRWVuBAYSeRhleXZsBnjEgF5QtEIXFPd0mAAKAEoAbiysgQB3UNylFTbgXuj2SFCAcgAjPSQNGYwJ6MkSdiiEaYADCYAeAFd2AD4JjMJgYABiBEUwUIBBGAUNNoBmDr8-C8JLg5cc50S6g-6EA7VcJbbDYGoZEBzdhHBAI0IGVRzErwkCmFDsPRY9gMcriQhtGZgBDLUIAalCpk4dDYAA8OgjgWCuYQ6EdJKEbtdGcyECyfn8wQcKNVOeCARQgX9rhR7jpxSCIRQTrLdqsNQZqHoNuxBDs4kdtMoDJ1xhrLthBAAVTiSBB6I7kzqhGqnUK27lhCR0eSuuIJUKERLVJ5OACaADkAMISwjDfKFQ0bAwIOiESrRuNJ71DPIqBii6LMsYpy7rTbbPYHOYeyN0dF0VTULjUADWOKxMDRXfksJxEiQfuAw9h4pAp2uGk4HCQPylzeIBlO+zt4L83RThDAnEqDvJM1M2DAJWQDDYZBWfoA+uUphGYCi9z0dwFQnYAKwWBY7Iar8dB7iAfhAA)
+[Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSANCAzlA2uAC6EAO2kA9BQMZIB2AdAFbZIIA2AlgG4wN0JCFFGBoIYCALbUpFGAENqhHggC02AJ51qYGAHs6nAF7iAAtwAMDAEwMAjMMEBlLTv2GTfFpiKlyVWkYWNi5efkFhURkJaVkFJRV1V10DYzNLGxtHQidqGE4SQmZcAF0AXyxcSBAqAAI8hHlCBFqAMz09Ws1tFI9xAB06ACVFZW4EBhJ5GGV5dmwGds6AXlq0HOT3NJgACgBKAG5B7mm2joBVGHZa1YByMGIyShp6YpCePgEhETEYmUk5KNEt03KlPOYrLYAMwUJYMeJjCYsW6DQYCADutRGCXGO2AqOa7EgtVuACM9EgNLcMATmpISOwmghiQADAkAHgAruwAHwE-qEYDAADEjR0tQAgjAFBodlC9mUyvzCAL2Vw+XQBVqVYR2Ut6ozsNhlv0QKT2JyEKbagZVKTpiaQKYUOw9Pb2Aw5uJCDt7ggqbUANS1UycOhsAAee1NGu1ccIdE5klqwqFofDCAjiuV2vZsI6sZ1qoo6uVQooYrA2c1uoo3MLLJpNYM1D09PYgmZbU52mUBn2+JrAvWuXyhR2S0u7AwtX2Nx5tUH8cIYE4C2wgl9pmwYGmyAYbDI1MXAH05kTaoQYJayodlbeCUq6LeQGUgA)
 
 ```js
-// create foo synchronizer
+// create foo synchronizer as a placeholder while we are loading fooASYNC component
 Ractive.partials.foo = getSynchronizer();
+var fooUrl = 'https://cdn.jsdelivr.net/gh/ceremcem/ractive-synchronizer@v0.2.3/foo.ractive.js'
 
 new Ractive({
   el: 'body',
@@ -93,13 +82,9 @@ new Ractive({
   </ul>
   `,
   oncomplete: function(){
-    setTimeout(() => {
-      // rename foo to fooASYNC
-      Ractive.components.fooASYNC = Ractive.extend({
-        template: `<button on-click="bar" class="red {{class}}">{{yield}}</button>`
-      });
+    getScript(fooUrl, () => {
       this.set('@shared.deps', {_all: true});
-    }, 1500)
+    })
   }
 })
 
