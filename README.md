@@ -2,15 +2,34 @@
 
 This HOWTO explains how to convert sync components into async components in Ractive. 
 
+### How
+
+1. Create a simple component.
+2. Use it anywhere you like in your app.
+3. When you need to remove it from your main bundle and load asynchronously: 
+    1. Create a synchronizer proxy with your original component's name
+    
+            Ractive.partials.foo = getSynchronizer();
+
+    2. Add `ASYNC` postfix to your original component name
+
+            Ractive.components.fooASYNC = Ractive.extend(...)
+
+    3. Remove `fooASYNC` (and its dependencies) from your bundle and load it any time in the future with any method you like (XHR, websockets, etc...)
+    4. Send a signal to the synchronizer when your component is ready.
+
+
 ### Advantages 
-1. Convert any sync component into async component with only 2 lines of modification. 
-2. Decide when, if and how you will load the component 
+
+1. No modifications needed in your production app.
+2. Convert any sync component into async component with only 2 lines of modification. 
+3. Control when, if and how you would load the component.
 
 ### Screenshot 
 
 ![async-fallback](https://user-images.githubusercontent.com/6639874/43196121-a5918686-900f-11e8-9718-793d49c9be34.gif)
 
-# Steps 
+# Example
 
 ### 1. Write a simple component 
 
@@ -40,17 +59,16 @@ new Ractive({
 })
 ```
 
-### 2. Create a synchronizer proxy 
+### 2. Make it async 
 
-1. Create a synchronizer proxy with your original component's name 
+2. Create a synchronizer proxy with your original component's name
 
         Ractive.partials.foo = getSynchronizer();
 
-2. Add `ASYNC` postfix to your original component name
+
+1. Add `ASYNC` postfix to your original component name
 
         Ractive.components.fooASYNC = Ractive.extend(...)
-
-### 3. Load your component asynchronously 
 
 1. Remove `fooASYNC` component from your bundle. Load it at any time (preferably sometime after `Ractive.oncomplete`) by any transport method (`<script>`, XHR, websockets, etc.) you like.
 2. Set `@shared.deps._all` flag to `true` when your ASYNC component is available. 
