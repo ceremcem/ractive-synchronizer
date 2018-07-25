@@ -61,17 +61,17 @@ new Ractive({
 
 ### 2. Make it async 
 
-2. Create a synchronizer proxy with your original component's name
+1. Create a synchronizer proxy with your original component's name
 
         Ractive.partials.foo = getSynchronizer();
 
 
-1. Add `ASYNC` postfix to your original component name
+2. Add `ASYNC` postfix to your original component name
 
         Ractive.components.fooASYNC = Ractive.extend(...)
 
-1. Remove `fooASYNC` component from your bundle. Load it at any time (preferably sometime after `Ractive.oncomplete`) by any transport method (`<script>`, XHR, websockets, etc.) you like.
-2. Set `@shared.deps._all` flag to `true` when your ASYNC component is available. 
+3. Remove `fooASYNC` component from your bundle. Load it at any time (preferably sometime after `Ractive.oncomplete`) by any transport method (`<script>`, XHR, websockets, etc.) you like.
+4. Set `@shared.deps._all` flag to `true` when your ASYNC component is available. 
 
 [Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSANCAzlA2uAC6EAO2kA9BQMZIB2AdDAIYDuKAloQ9QPYC2NBDAT9qoii2qEOANwQBabAE861MDF50OAL2EUAzABZmRgJwBWAIwB2CmkIBlVes3a9MBgCtcAXQC+WLiQIFQABNQizIQIYQBmvLxhKmoaWrrCADp0AErM0nIIDCTMMDLMADbYDAlJALxhDs6pbhkwABQAlADc2dl0CKxheQXy7cB9MRWQYQDkAEa8SMqzGJMx-CQV0QgzAAaTADwArhUAfJOZhMDAAMQI+WBhAIIwLMrtBp3+-peEV4cKhwLnQrmD-oRDrUIttsNg6pkQPMKscEIiwloFPNSgiQAABFAVXjYioMSrCQjtWZgBArMIAajCeI4dCQCAAHp1ESDwbzCHRjvwwrcbszWRyfn9wYcKLUeRCARQgfKrjcKA91JLQZCKKd5Xs1tqtHxNhUEDEZnFjmoZFouhNtVdsOaACocfgIXjHSldMJ1M5hB188IiOjMD3xRJhQhJWrPRwATQAcgBhKWEEYyeQ8AQkLQIOiEapxxOpv3DfJZoocmKs8bpq4bLY7faHebemN0DF0BTUIHUADWuOxMHRfeYcNxIiQgeA47hkpAZxuyg4CAqSB+MvbxC0ZwOjoh-h66cIYA41WdlNmeOwYFKyAYbLIq0DAH1KtNozBUcfeofAjCKwLAABhArltV+OhjxAfwgA)
 
