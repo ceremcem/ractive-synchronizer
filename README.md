@@ -2,6 +2,10 @@
 
 This HOWTO explains how to convert sync components into async components in Ractive. 
 
+### Advantages 
+1. Convert any sync component into async component with only 2 lines of modification. 
+2. Decide when, if and how you will load the component 
+
 # Steps 
 
 ### 1. Write a simple component 
