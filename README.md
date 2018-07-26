@@ -31,22 +31,17 @@ https://aktos.io/scadajs-template/#/showcase/async-comp
 
 ![async-fallback2](https://user-images.githubusercontent.com/6639874/43233515-f7f8ca5a-907e-11e8-80f5-759a2cf86dba.gif)
 
-# Example
+# Bare Example
 
 ### 1. Write a simple component
 
-Write a simple (sync) component:
+Write a simple (sync) component and use it in many places in your application:
 
 ```js
 Ractive.components.foo = Ractive.extend({
   template: `<button on-click="bar" class="red {{class}}">{{yield}}</button>`
 });
-```
 
-...and use it anywhere in your application ([Playground](https://ractive.js.org/playground/?env=docs#N4IgFiBcoE5SBTAJgcwSAvgGhAZ3gEoCGAxgC4CWAbggHQkD2AtgA4MB2C7ZutAZgwYACALxDi5anQQAPMlyQAKYAB12KsvNYAbIvMhCABmo0aAPACMArpo5COAWhLaKJANYiVIC0RhehzkS4uJ4gMMhCwMCBwRgYXgB8UQCeFAjaSHFmAPTWtuwJJmTG7BgAlADcJuycAO7ipJQ0ykXpBgDkFgxIye1YRVosuvpGRWZW2oXqZBpRAMQIpGBCAIIwMETJigDMZXFFpmRmLlOHh2YCwjEhXhbaVgj+jj4woQACKNoMPtq0RNoIGBkRTtMAIXpCADUQjeFHYSFkZUSBxmqI07CsTCEcyisPhsn20zOR2yl1OaJJJxRUWyixIYEJ5myE3JJXKmCAA)):
-
-
-```js
 new Ractive({
   el: 'body',
   template: `
@@ -71,25 +66,13 @@ Ractive.partials.foo = getSynchronizer();
 var fooUrl = 'https://url/to/foo.ractive.js'
 
 new Ractive({
-  el: 'body',
-  template: `
-  <ul>
-    {{#each Array(3)}}
-      <li>
-        <foo class="blue" on-bar="@global.alert('hey' + @index)">
-          num #{{@index}}
-        </foo>
-      </li>
-    {{/each}}
-  </ul>
-  `,
+  ...
   oncomplete: function(){
     getScript(fooUrl, () => {
       this.set('@shared.deps', {_all: true});
     })
   }
 })
-
 ```
 
 ### 4. Optionally supply a custom "loading" template
