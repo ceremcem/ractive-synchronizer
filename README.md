@@ -75,10 +75,10 @@ new Ractive({
 })
 ```
 
-### 4. Optionally supply a custom "loading" template
+### 4. [OPTIONAL] Supply a "loading" time component
 
 You may also want to supply a "loading state" version of the async component to
-provide a basic functionality (eg. providing a `textarea` while waiting for
+provide a basic functionality to the user (eg. providing a `textarea` while waiting for
 `ace-editor` might be a good idea):
 
 1. Create a component as usual:
