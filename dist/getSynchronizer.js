@@ -6,7 +6,9 @@ window.getSynchronizer = function(placeholder){
     throw new Error("placeholder MUST be the component's name");
   }
   return Ractive.macro(function(handle, attrs){
-    var obj, _orig, orig, modComp;
+    var actualComp, loadingComp, obj, _orig, orig, modComp;
+    actualComp = handle.name + "ASYNC";
+    loadingComp = placeholder || handle.name + "LOADING";
     obj = {
       observers: [],
       update: function(attrs){},
@@ -28,16 +30,12 @@ window.getSynchronizer = function(placeholder){
       return orig;
     };
     obj.observers.push(handle.observe('@shared.deps._all', function(val){
-      var ph;
-      if (val) {
-        handle.setTemplate(modComp(handle.name + "ASYNC"));
+      if (Ractive.components[actualComp]) {
+        handle.setTemplate(modComp(actualComp));
+      } else if (Ractive.components[loadingComp]) {
+        handle.setTemplate(modComp(loadingComp));
       } else {
-        ph = placeholder || handle.name + "LOADING";
-        if (Ractive.components[ph]) {
-          handle.setTemplate(modComp(ph));
-        } else {
-          handle.setTemplate("<div class='ui yellow message'>\n    We are fetching <i>" + handle.name + "</i>\n</div>");
-        }
+        handle.setTemplate("<div class='ui yellow message'>\n    We are fetching <i>" + handle.name + "</i>\n</div>");
       }
     }));
     return obj;

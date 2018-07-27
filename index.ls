@@ -3,6 +3,9 @@ window.get-synchronizer = (placeholder) ->
         throw new Error "placeholder MUST be the component's name"
 
     return Ractive.macro (handle, attrs) ~>
+        actual-comp = "#{handle.name}ASYNC"
+        loading-comp = placeholder or "#{handle.name}LOADING"
+
         obj =
             observers: []
             update: (attrs) ->
@@ -20,17 +23,17 @@ window.get-synchronizer = (placeholder) ->
             return orig
 
         obj.observers.push handle.observe '@shared.deps._all', (val) !->
-            #console.log "#{handle.name} instance received a signal: #{JSON.stringify val}"
-            if val
-                handle.setTemplate mod-comp "#{handle.name}ASYNC"
+            if Ractive.components[actual-comp]
+                # enable actual component
+                handle.setTemplate mod-comp actual-comp
+            else if Ractive.components[loading-comp]
+                # enable loading state component
+                handle.setTemplate mod-comp loading-comp
             else
-                ph = placeholder or "#{handle.name}LOADING"
-                if Ractive.components[ph]
-                    handle.setTemplate mod-comp ph
-                else
-                    handle.setTemplate """
-                        <div class='ui yellow message'>
-                            We are fetching <i>#{handle.name}</i>
-                        </div>
-                        """
+                # show default message
+                handle.setTemplate """
+                    <div class='ui yellow message'>
+                        We are fetching <i>#{handle.name}</i>
+                    </div>
+                    """
         return obj
