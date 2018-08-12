@@ -27,7 +27,7 @@ This HOWTO explains how to convert sync components into async components in Ract
 
 ### Live Demo
 
-https://aktos.io/scadajs-template/#/showcase/async-comp
+https://aktos.io/st/#/showcase/async-comp
 
 ![async-fallback2](https://user-images.githubusercontent.com/6639874/43233515-f7f8ca5a-907e-11e8-80f5-759a2cf86dba.gif)
 
