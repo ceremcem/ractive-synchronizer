@@ -13,7 +13,10 @@ This HOWTO explains how to convert sync components into async components in Ract
 
     2. Add `ASYNC` postfix to your original component name
 
-            Ractive.components.fooASYNC = Ractive.extend(...)
+          ```patch
+          - Ractive.components.foo = Ractive.extend(...)
+          + Ractive.components.fooASYNC = Ractive.extend(...)
+          ```
 
     3. Remove `fooASYNC` (and its dependencies) from your bundle and load it any time in the future with any method you like (XHR, websockets, etc...)
     4. Send a signal to the synchronizer when your component is ready.
