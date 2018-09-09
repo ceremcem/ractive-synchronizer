@@ -92,3 +92,4 @@ provide a basic functionality to the user (eg. providing a `textarea` while wait
 
             Ractive.partials.foo = getSynchronizer('fooLOADING');
 
+In this case, `fooLOADING` component is rendered wherever `foo` is used at the beginning. When `fooASYNC` (the actual component) is ready, `fooLOADING` is replaced by `fooASYNC`. 
