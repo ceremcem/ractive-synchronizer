@@ -9,7 +9,9 @@ This HOWTO explains how to convert sync components into async components in Ract
 3. When you need to remove it from your main bundle and load asynchronously:
     1. Create a synchronizer proxy with your original component's name
 
-            Ractive.partials.foo = getSynchronizer();
+          ```patch
+          + Ractive.partials.foo = getSynchronizer();
+          ```
 
     2. Add `ASYNC` postfix to your original component name
 
@@ -19,7 +21,7 @@ This HOWTO explains how to convert sync components into async components in Ract
           ```
 
     3. Remove `fooASYNC` (and its dependencies) from your bundle and load it any time in the future with any method you like (XHR, websockets, etc...)
-    4. Send a signal to the synchronizer when your component is ready.
+    4. After loading `fooASYNC` in runtime, send a signal to the synchronizer and your "component" `foo` will be replaced by `fooASYNC`.
 
 
 ### Advantages
